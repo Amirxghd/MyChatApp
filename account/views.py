@@ -88,7 +88,7 @@ def edit_view(request, username):
 
     context['form'] = form
     context['account'] = account
-    return render(request, 'account/edit.html', context)
+    return render(request, 'account/account_edit.html', context)
 
 
 @login_required(login_url='login')
