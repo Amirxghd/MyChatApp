@@ -52,11 +52,9 @@ class Account(AbstractBaseUser):
     is_staff = models.BooleanField(default=False)
     is_superuser = models.BooleanField(default=False)
     profile_image = models.ImageField(max_length=255, upload_to=get_profile_image_filepath, null=True, blank=True, default=get_default_profile_image)
-    hide_email = models.BooleanField(default=True)
+    hide_email = models.BooleanField(default=True, blank=False, null=False)
 
     full_name = models.CharField(max_length=30, blank=True, null=True)
-    mobile_number = models.IntegerField(blank=True, null=True)
-    address = models.CharField(max_length=30, blank=True, null=True)
 
     bio = models.CharField(max_length=30, blank=True, null=True)
 
