@@ -44,7 +44,7 @@ class AccountUpdateForm(forms.ModelForm):
 
         widgets = {
             'hide_email': forms.CheckboxInput(attrs={
-                'class': 'form-control'}),
+                'class': 'form-group'}),
         }
 
     def __init__(self, *args, **kwargs):
@@ -53,7 +53,7 @@ class AccountUpdateForm(forms.ModelForm):
         self.fields['username'].widget.attrs.update({'class': 'form-control'})
         self.fields['bio'].widget.attrs.update({'class': 'form-control', 'row': 5})
         self.fields['profile_image'].widget.attrs.update({'class': 'btn btn-primary'})
-        self.fields['hide_email'].widget.attrs.update({'class': 'custom-control-input'})
+        # self.fields['hide_email'].widget.attrs.update({'class': 'custom-control-input'})
 
 
 
