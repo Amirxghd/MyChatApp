@@ -97,6 +97,28 @@ def reset_invite_link(request, username):
     return redirect('user_rooms')
 
 
+@login_required(login_url='login')
+def remove_group(request, username):
+    try:
+        group = PublicChatRoom.objects.get(chat_username=username)
+        if group.owner == request.user:
+            group.delete()
+
+    except PublicChatRoom.DoesNotExist:
+        pass
+
+    return redirect('user_rooms')
+
+
+def exit_group(request, username):
+    try:
+        group = PublicChatRoom.objects.get(chat_username=username)
+        group.registered_users.remove(request.user)
+
+    except PublicChatRoom.DoesNotExist:
+        pass
+
+    return redirect('user_rooms')
 
 
 
