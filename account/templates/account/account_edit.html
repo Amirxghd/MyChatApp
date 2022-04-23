@@ -24,9 +24,6 @@
                   <div class="text-center text-sm-left mb-2 mb-sm-0">
                     <h4 class="pt-sm-2 pb-1 mb-0 text-nowrap">{{ account.full_name }}</h4>
                     <p class="mb-0">@{{ account.username }}</p>
-{#                    <div class="mt-2">#}
-{#                      <input class="btn btn-primary" type="file" name="myfile">#}
-{#                    </div>#}
                   </div>
                   <div class="text-center text-sm-right">
                     <span class="badge badge-secondary">administrator</span>
@@ -54,7 +51,6 @@
                             <div class="form-group">
                               <label>Username</label>
                                 {{ form.username }}
-{#                              <input class="form-control" type="text" name="username" placeholder="johnny.s" value="johnny.s">#}
                             </div>
                           </div>
                         </div>
@@ -63,7 +59,6 @@
                             <div class="form-group">
                               <label>About</label>
                                 {{ form.bio }}
-{#                              <textarea class="form-control" rows="5" placeholder="My Bio" name="about"></textarea>#}
                             </div>
                           </div>
                         </div>
@@ -82,16 +77,11 @@
 
                       </div>
                       <div class="col-12 col-sm-5 offset-sm-1 mb-3">
-                        <div class="mb-2"><b>Keeping in Touch</b></div>
                         <div class="row">
                           <div class="col">
                             <label>Preference</label>
                             <div class="custom-controls-stacked px-2">
-                              <div class="custom-control custom-checkbox">
-{#                                <input type="checkbox" class="custom-control-input" id="notifications-blog" checked="" name="hide_email">#}
-                                  {{ form.hide_email }}
-                                <label class="custom-control-label" for="notifications-blog">Hide email</label>
-                              </div>
+                                  <p>{{ form.hide_email }} Hide email</p>
                             </div>
                           </div>
                         </div>

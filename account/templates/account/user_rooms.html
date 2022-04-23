@@ -37,14 +37,28 @@
                                 <a href="{% url 'edit_room' room.chat_username%}">Edit Room</a>
                             </span>
                                 <br>
+                             <span class="text-80">
+                                <a href="{% url 'remove_group' room.chat_username%}">Delete Room</a>
+                            </span>
+                                <br>
                             <span class="text-80">
                                 <a href="{% url 'reset_invite_link' username=room.chat_username %}">Reset Invite Link</a>
                             </span>
                                 <br>
                             <input type="button" value="Show Invite link" onclick="onButtonClick({{ forloop.counter}})" />
                                 <br>
+                            {% else %}
+                            <span class="text-80">
+                                <a href="{% url 'exit_group' username=room.chat_username %}">Exit group</a>
+                            </span>
+                                <br>
+
                             {% endif %}
+                            <span class="text-80">
                                 Members: {{ room.registered_users.count|add:"1" }}
+                            </span>
+                            <br>
+
                         </span>
 
                     </div>
