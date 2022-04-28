@@ -408,7 +408,7 @@ body{margin-top:20px;}
         profileImage.height = 40
 		profileImage.src = profile_image
         profileImage.addEventListener("click", function(e){
-			selectUser(username)
+			 openPopup(username, profile_image)
 		})
         profileImage.alt = 'User'
 
@@ -438,9 +438,8 @@ body{margin-top:20px;}
         user.classList.add('mb-1')
         user.innerHTML = username
         user.addEventListener("click", function(e){
-			selectUser(username)
+			 openPopup(username, profile_image)
 		})
-
         var msg_p =document.createElement('p')
         msg_p.innerHTML = msg
 
@@ -483,7 +482,7 @@ body{margin-top:20px;}
         profileImage.height = 40
         profileImage.src = profile_image
         profileImage.addEventListener("click", function(e){
-			selectUser(username)
+			 openPopup(username, profile_image)
 		})
 
         main_div.appendChild(profileImage)
