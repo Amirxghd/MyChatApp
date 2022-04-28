@@ -25,26 +25,6 @@ PUBLIC CHAT
 						</div>
 					</div>
                     <div class="user-messsages p-4" id="id_user_log">
-                        <a href="#" class="list-group-item list-group-item-action border-0">
-                            <div class="badge bg-success float-right">5</div>
-                            <div class="d-flex align-items-start">
-                                <img src="https://bootdey.com/img/Content/avatar/avatar5.png" class="rounded-circle mr-1" alt="Vanessa Tucker" width="40" height="40">
-                                <div class="flex-grow-1 ml-3">
-                                    Vanessa Tucker
-                                    <div class="small"><span class="fas fa-circle chat-online"></span> Online</div>
-                                </div>
-                            </div>
-                            </a>
-                        <a href="#" class="list-group-item list-group-item-action border-0">
-                            <div class="badge bg-success float-right">2</div>
-                            <div class="d-flex align-items-start">
-                                <img src="https://bootdey.com/img/Content/avatar/avatar2.png" class="rounded-circle mr-1" alt="William Harris" width="40" height="40">
-                                <div class="flex-grow-1 ml-3">
-                                    William Harris
-                                    <div class="small"><span class="fas fa-circle chat-online"></span> Online</div>
-                                </div>
-                            </div>
-                        </a>
                     </div>
 
 
@@ -492,6 +472,7 @@ body{margin-top:20px;}
         second_div.classList.add("ml")
         second_div.classList.add("ml-3")
         second_div.innerHTML = username
+        second_div.style.cursor = 'pointer'
 
         second_div.addEventListener("click", function(e){
 			 openPopup(username, profile_image)
