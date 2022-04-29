@@ -187,8 +187,12 @@ body{margin-top:20px;}
 	onStart()
 
 	function onStart(){
-        {% if m_and_f %}
-            onSelectFriend("{{m_and_f.0.friend.id}}")
+        {% if main_user %}
+            onSelectFriend("{{main_user.id}}")
+        {% else %}
+            {% if m_and_f %}
+                onSelectFriend("{{m_and_f.0.friend.id}}")
+            {% endif %}
         {% endif %}
 	}
 

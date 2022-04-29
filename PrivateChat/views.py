@@ -13,23 +13,19 @@ DEBUG = False
 
 @login_required(login_url='login')
 def private_chat(request, *args, **kwargs):
-    #
-    # account_id = request.GET.get("account_id")
-    # print(account_id)
+
     context = {}
-    # if account_id:
-    #     print(account_id)
-    #     try:
-    #         other_user = Account.objects.get(id=account_id)
-    #     except Account.DoesNotExist:
-    #         return HttpResponse('user does not exists')
-    #
-    #     if request.user == other_user:
-    #         return HttpResponse('you can not chat with your self, are you psycho??')
-    #
-    #     chat = find_or_create_private_chat(request.user, other_user)
-    #     context['room_id'] = chat.id
-    #     context['room'] = chat
+    account_id = request.POST.get('account_id')
+
+    if account_id:
+        try:
+            other_user = Account.objects.get(id=account_id)
+        except Account.DoesNotExist:
+            return HttpResponse('account does not exists')
+
+        new_room = find_or_create_private_chat(request.user, other_user)
+        context['main_user'] = other_user
+
 
     # 1. Find all the rooms this user is a part of
     rooms1 = PrivateChatRoom.objects.filter(user1=request.user)
