@@ -210,7 +210,7 @@ class PrivateChatConsumer(AsyncJsonWebsocketConsumer):
         Called when someone has left our chat.
         """
         # Send a message down to the client
-        print("ChatConsumer: chat_leave")
+        print("Private Consumer: chat_leave- ", event["username"])
         if event["username"]:
             await self.send_json(
             {
@@ -229,7 +229,7 @@ class PrivateChatConsumer(AsyncJsonWebsocketConsumer):
         Called when someone has messaged our chat.
         """
         # Send a message down to the client
-        print("ChatConsumer: chat_message")
+        print("Private Consumer: chat_message")
 
         timestamp = calculate_timestamp(timezone.now())
 
