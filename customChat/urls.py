@@ -24,6 +24,7 @@ urlpatterns = [
     path('', views.index_page, name='home'),
     path('account/', include('account.urls')),
     path('room/', include('public_chat.urls')),
+    path('private_chat/', include('PrivateChat.urls')),
 
 ]
 if settings.DEBUG:

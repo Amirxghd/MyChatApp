@@ -44,6 +44,7 @@ INSTALLED_APPS = [
 
     'account',
     'public_chat',
+    'PrivateChat',
 ]
 
 MIDDLEWARE = [

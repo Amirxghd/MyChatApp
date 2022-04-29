@@ -242,8 +242,6 @@ class PublicChatConsumer(AsyncJsonWebsocketConsumer):
 @database_sync_to_async
 def get_connected_users(room):
     serializer = RoomSerializer(room)
-    # x = JSONRenderer().render(serializer.data)
-    # print(type(x))
     return serializer.data
 
 
