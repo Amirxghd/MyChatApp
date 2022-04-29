@@ -25,6 +25,18 @@ PUBLIC CHAT
 						</div>
 					</div>
                     <div class="user-messsages p-4" id="id_user_log">
+                        {% for user in m_and_f %}
+                        <a href="#" class="list-group-item list-group-item-action border-0" onclick="onSelectFriend('{{user.friend.id}}')" id="id_friend_container_{{user.friend.id}}">
+{#                            <div class="badge bg-success float-right">5</div>#}
+                            <div class="d-flex align-items-start">
+                            <img src="{{ user.friend.profile_image.url }}" class="rounded-circle mr-1" alt="Vanessa Tucker" width="40" height="40">
+                            <div class="flex-grow-1 ml-3">
+                                {{ user.friend.username }}
+{#                                <div class="small"><span class="fas fa-circle chat-online"></span> Online</div>#}
+                            </div>
+						</div>
+					</a>
+                        {% endfor %}
                     </div>
 
 
@@ -183,8 +195,8 @@ body{margin-top:20px;}
 	function onSelectFriend(userId){
 		console.log("onSelectFriend: " + userId)
 		createOrReturnPrivateChat(userId)
-		{#clearHighlightedFriend()#}
-		{#highlightFriend(userId)#}
+		clearHighlightedFriend()
+		highlightFriend(userId)
 	}
 
 	function closeWebSocket(){
@@ -247,10 +259,6 @@ body{margin-top:20px;}
 				console.log("Leaving room " + data.leave);
 			}
 
-			// user info coming in from backend
-			if(data.user_info){
-				handleUserInfoPayload(data.user_info)
-			}
 
 			// Handle getting a message
 			if (data.msg_type == 0 || data.msg_type == 1 || data.msg_type == 2) {
@@ -361,11 +369,11 @@ body{margin-top:20px;}
 				break;
 			case 1:
 				// User joined room
-				createConnectedDisconnectedElement(message, msg_id, profile_image, user_id)
+				createConnectedDisconnectedElement(message, msg_id, profile_image)
 				break;
 			case 2:
 				// User left room
-				createConnectedDisconnectedElement(message, msg_id, profile_image, user_id)
+				createConnectedDisconnectedElement(message, msg_id, profile_image)
 				break;
 			default:
 				console.log("Unsupported message type!");
@@ -448,7 +456,7 @@ body{margin-top:20px;}
         chatLog.scrollTop = chatLog.scrollHeight
 	}
 
-	function createConnectedDisconnectedElement(msg, msd_id, profile_image, user_id){
+	function createConnectedDisconnectedElement(msg, msd_id, profile_image){
 		var chatLog = document.getElementById("id_chat_log")
 
         var newMessageDiv = document.createElement("div")
@@ -487,7 +495,7 @@ body{margin-top:20px;}
 
         newMessageDiv.appendChild(user_msg)
 
-		chatLog.insertBefore(newMessageDiv, chatLog.firstChild)
+		chatLog.appendChild(newMessageDiv)
 
  	}
 
@@ -557,36 +565,20 @@ body{margin-top:20px;}
 		document.getElementById("id_chat_log").removeEventListener("scroll", chatLogScrollListener)
 	}
 
-    /*
-	function displayChatroomLoadingSpinner(isDisplayed){
-		console.log("displayChatroomLoadingSpinner: " + isDisplayed)
-		var spinner = document.getElementById("id_chatroom_loading_spinner")
-		if(isDisplayed){
-			spinner.style.display = "block"
-		}
-		else{
-			spinner.style.display = "none"
-		}
-	}
-	/*
-     */
 
 	function highlightFriend(userId){
 		// select new friend
-		document.getElementById("id_friend_container_" + userId).style.background = "#f2f2f2"
+		document.getElementById("id_friend_container_" + userId).style.backgroundColor = "#282d32"
 	}
 
 	function clearHighlightedFriend(){
 		{% if m_and_f %}
-			{% for x in m_and_f %}
-				document.getElementById("id_friend_container_{{x.friend.id}}").style.background = ""
+			{% for user in m_and_f %}
+				document.getElementById("id_friend_container_{{user.friend.id}}").style.backgroundColor = ""
 			{% endfor %}
 		{% endif %}
 
-		// clear the profile image and username of current chat
-		document.getElementById("id_other_user_profile_image").classList.add("d-none")
-		{#document.getElementById("id_other_user_profile_image").src = "{% static 'codingwithmitch/dummy_image.png' %}"#}
-		document.getElementById("id_other_username").innerHTML = ""
+
 	}
 
 
