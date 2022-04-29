@@ -451,25 +451,41 @@ body{margin-top:20px;}
 	function createConnectedDisconnectedElement(msg, msd_id, profile_image, user_id){
 		var chatLog = document.getElementById("id_chat_log")
 
-		var newMessageDiv = document.createElement("div")
-		newMessageDiv.classList.add("d-flex")
-		newMessageDiv.classList.add("flex-row")
-		newMessageDiv.classList.add("message-container")
+        var newMessageDiv = document.createElement("div")
+        newMessageDiv.classList.add("chat-message-left")
+
+		newMessageDiv.classList.add("pb-4")
+
+        var div2 = document.createElement("div")
 
 		var profileImage = document.createElement("img")
 
-		profileImage.classList.add("profile-image")
 		profileImage.classList.add("rounded-circle")
-		profileImage.classList.add("img-fluid")
-		{#profileImage.src = "{% static 'codingwithmitch/dummy_image.png' %}"#}
-		var profile_image_id = "id_profile_image_" + msg_id
-		profileImage.id = profile_image_id
-		newMessageDiv.appendChild(profileImage)
+		profileImage.classList.add("mr-1")
+		profileImage.width = 40
+        profileImage.height = 40
+		profileImage.src = profile_image
+        profileImage.alt = 'User'
 
-		var usernameSpan = document.createElement("span")
-		usernameSpan.innerHTML = msg
-		usernameSpan.classList.add("username-span")
-		newMessageDiv.appendChild(usernameSpan)
+        div2.appendChild(profileImage)
+
+        newMessageDiv.appendChild(div2)
+
+        var user_msg = document.createElement("div")
+        user_msg.classList.add('flex-shrink-1')
+        user_msg.classList.add('bg-light')
+        user_msg.classList.add('rounded')
+        user_msg.classList.add('py-2')
+        user_msg.classList.add('px-3')
+        user_msg.classList.add('mr-3')
+
+
+        var msg_p =document.createElement('p')
+        msg_p.innerHTML = msg
+
+        user_msg .appendChild(msg_p)
+
+        newMessageDiv.appendChild(user_msg)
 
 		chatLog.insertBefore(newMessageDiv, chatLog.firstChild)
 
