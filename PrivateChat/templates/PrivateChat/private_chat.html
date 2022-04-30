@@ -352,12 +352,12 @@ body{margin-top:20px;}
 
 	function appendChatMessage(data, maintainPosition, isNewMessage){
 		messageType = data['msg_type']
-		msg_id = data['msg_id']
-		message = data['message']
-		uName = data['username']
-		user_id = data['user_id']
-		profile_image = data['profile_image']
-		timestamp = data['natural_timestamp']
+		msg_id = data['id']
+		message = data['content']
+		uName = data['user']['username']
+		user_id = data['user']['user_id']
+		profile_image = data['user']['profile_image']
+		timestamp = data['timestamp']
 		console.log("append chat message: " + messageType)
 
 		var msg = "";

@@ -1,11 +1,9 @@
 from channels.generic.websocket import AsyncJsonWebsocketConsumer
 from channels.db import database_sync_to_async
-from django.core.serializers import serialize
 from django.utils import timezone
 from django.core.paginator import Paginator
 from datetime import datetime
 from django.contrib.humanize.templatetags.humanize import naturalday
-from django.core.serializers.python import Serializer
 
 from rest_framework import serializers
 
@@ -56,6 +54,7 @@ class PrivateChatConsumer(AsyncJsonWebsocketConsumer):
                 room = await get_room_or_error(content['room_id'], self.scope["user"])
                 payload = await get_room_chat_messages(room, content['page_number'])
                 if payload:
+                    print(payload)
                     payload = json.loads(payload)
                     await self.send_messages_payload(payload['messages'], payload['new_page_number'])
                 else:
@@ -313,8 +312,6 @@ def get_room_or_error(room_id, user):
     return room
 
 
-# I don't think this requires @database_sync_to_async since we are just accessing a model field
-# https://docs.djangoproject.com/en/3.1/ref/models/instances/#refreshing-objects-from-database
 @database_sync_to_async
 def get_user_info(room, user):
     """
@@ -327,9 +324,8 @@ def get_user_info(room, user):
             other_user = room.user2
 
         payload = {}
-        s = LazyAccountEncoder()
-        # convert to list for serializer and select first entry (there will be only 1)
-        payload['user_info'] = s.serialize([other_user])[0]
+        payload['user_info'] = AccountSerializer(other_user).data
+        print(payload['user_info'])
         return json.dumps(payload)
     except ClientError as e:
         raise ClientError("DATA_ERROR", "Unable to get that users information.")
@@ -352,8 +348,11 @@ def get_room_chat_messages(room, page_number):
         new_page_number = int(page_number)
         if new_page_number <= p.num_pages:
             new_page_number = new_page_number + 1
-            s = LazyRoomChatMessageEncoder()
-            payload['messages'] = s.serialize(p.page(page_number).object_list)
+            # s = LazyRoomChatMessageEncoder()
+            # payload['messages'] = s.serialize(p.page(page_number).object_list)
+            z = p.page(page_number).object_list
+            x = PrivateRoomChatMessageSerializer(z, many=True).data
+            payload['messages'] = x
         else:
             payload['messages'] = "None"
         payload['new_page_number'] = new_page_number
@@ -374,19 +373,6 @@ def calculate_timestamp(timestamp):
     return str(ts)
 
 
-class LazyRoomChatMessageEncoder(Serializer):
-    def get_dump_object(self, obj):
-        dump_object = {}
-        dump_object.update({'msg_type': MSG_TYPE_MESSAGE})
-        dump_object.update({'msg_id': str(obj.id)})
-        dump_object.update({'user_id': str(obj.user.id)})
-        dump_object.update({'username': str(obj.user.username)})
-        dump_object.update({'message': str(obj.content)})
-        dump_object.update({'profile_image': str(obj.user.profile_image.url)})
-        dump_object.update({'natural_timestamp': calculate_timestamp(obj.timestamp)})
-        return dump_object
-
-
 class ClientError(Exception):
     def __init__(self, code, message):
         super(ClientError, self).__init__()
@@ -395,17 +381,28 @@ class ClientError(Exception):
             self.message = message
 
 
-class LazyAccountEncoder(Serializer):
-    def get_dump_object(self, obj):
-        dump_object = {}
-        dump_object.update({'id': str(obj.id)})
-        dump_object.update({'email': str(obj.email)})
-        dump_object.update({'username': str(obj.username)})
-        dump_object.update({'profile_image': str(obj.profile_image.url)})
-        return dump_object
-
-
 class AccountSerializer(serializers.ModelSerializer):
     class Meta:
         model = Account
-        fields = ['id', 'email', 'username', 'profile_image']
+        fields = ['id', 'username', 'profile_image']
+
+
+class PrivateRoomChatMessageSerializer(serializers.ModelSerializer):
+    user = AccountSerializer(many=False, read_only=True)
+    msg_type = serializers.ReadOnlyField(default=MSG_TYPE_MESSAGE)
+    timestamp = serializers.ReadOnlyField()
+    class Meta:
+        model = PrivateRoomChatMessage
+        fields = '__all__'
+
+    def to_representation(self, data):
+        data = super(PrivateRoomChatMessageSerializer, self).to_representation(data)
+        print(data.get('timestamp'))
+        print(type(data.get('timestamp')))
+        data['timestamp'] = calculate_timestamp(data.get('timestamp'))
+        return data
+
+
+
+
+
