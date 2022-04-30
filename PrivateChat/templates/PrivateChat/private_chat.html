@@ -354,10 +354,19 @@ body{margin-top:20px;}
 		messageType = data['msg_type']
 		msg_id = data['id']
 		message = data['content']
-		uName = data['user']['username']
-		user_id = data['user']['user_id']
-		profile_image = data['user']['profile_image']
-		timestamp = data['timestamp']
+        timestamp = data['timestamp']
+        if(data.user) {
+            uName = data['user']['username']
+            user_id = data['user']['user_id']
+            profile_image = data['user']['profile_image']
+        }
+        else{
+            uName = data['username']
+            user_id = data['user_id']
+            profile_image = data['profile_image']
+            }
+
+
 		console.log("append chat message: " + messageType)
 
 		var msg = "";

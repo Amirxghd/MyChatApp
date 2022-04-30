@@ -200,7 +200,7 @@ class PrivateChatConsumer(AsyncJsonWebsocketConsumer):
                     "profile_image": event["profile_image"],
                     "username": event["username"],
                     "user_id": event["user_id"],
-                    "message": event["username"] + " connected.",
+                    "content": event["username"] + " connected.",
                 },
             )
 
@@ -218,7 +218,7 @@ class PrivateChatConsumer(AsyncJsonWebsocketConsumer):
                 "profile_image": event["profile_image"],
                 "username": event["username"],
                 "user_id": event["user_id"],
-                "message": event["username"] + " disconnected.",
+                "content": event["username"] + " disconnected.",
             },
         )
 
@@ -397,8 +397,6 @@ class PrivateRoomChatMessageSerializer(serializers.ModelSerializer):
 
     def to_representation(self, data):
         data = super(PrivateRoomChatMessageSerializer, self).to_representation(data)
-        print(data.get('timestamp'))
-        print(type(data.get('timestamp')))
         data['timestamp'] = calculate_timestamp(data.get('timestamp'))
         return data
 
