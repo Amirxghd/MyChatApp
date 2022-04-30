@@ -22,9 +22,9 @@ def private_chat(request, *args, **kwargs):
             other_user = Account.objects.get(id=account_id)
         except Account.DoesNotExist:
             return HttpResponse('account does not exists')
-
-        new_room = find_or_create_private_chat(request.user, other_user)
-        context['main_user'] = other_user
+        if other_user != request.user:
+            find_or_create_private_chat(request.user, other_user)
+            context['main_user'] = other_user
 
 
     # 1. Find all the rooms this user is a part of
