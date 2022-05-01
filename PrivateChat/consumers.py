@@ -301,6 +301,7 @@ def get_room_or_error(room_id, user):
     Tries to fetch a room for the user, checking permissions along the way.
     """
     try:
+        print(room_id, user)
         room = PrivateChatRoom.objects.get(pk=room_id)
     except PrivateChatRoom.DoesNotExist:
         raise ClientError("ROOM_INVALID", "Invalid room.")
@@ -339,7 +340,6 @@ def create_room_chat_message(room, user, message):
 
 @database_sync_to_async
 def get_room_chat_messages(room, page_number):
-    time.sleep(1)
     try:
         qs = PrivateRoomChatMessage.objects.by_room(room)
         p = Paginator(qs, DEFAULT_ROOM_CHAT_MESSAGE_PAGE_SIZE)

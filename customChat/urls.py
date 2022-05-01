@@ -25,6 +25,7 @@ urlpatterns = [
     path('account/', include('account.urls')),
     path('room/', include('public_chat.urls')),
     path('private_chat/', include('PrivateChat.urls')),
+    path('chat/', include('chat.urls')),
 
 ]
 if settings.DEBUG:
