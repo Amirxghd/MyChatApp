@@ -181,7 +181,7 @@ class PrivateChatConsumer(AsyncJsonWebsocketConsumer):
                 "profile_image": self.scope["user"].profile_image.url,
                 "username": self.scope["user"].username,
                 "user_id": self.scope["user"].id,
-                "message": message,
+                "content": message,
             }
         )
 
@@ -238,8 +238,8 @@ class PrivateChatConsumer(AsyncJsonWebsocketConsumer):
                 "username": event["username"],
                 "user_id": event["user_id"],
                 "profile_image": event["profile_image"],
-                "message": event["message"],
-                "natural_timestamp": timestamp,
+                "content": event["content"],
+                "timestamp": timestamp,
             },
         )
 
