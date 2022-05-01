@@ -98,7 +98,7 @@ class PublicChatConsumer(AsyncJsonWebsocketConsumer):
                 "profile_image": self.scope['user'].profile_image.url,
                 "username": self.scope['user'].username,
                 "user_id": self.scope['user'].id,
-                "message": message,
+                "content": message,
             }
         )
 
@@ -112,8 +112,8 @@ class PublicChatConsumer(AsyncJsonWebsocketConsumer):
             "profile_image": event['profile_image'],
             "username": event['username'],
             "user_id": event['profile_image'],
-            "message": event['message'],
-            "natural_timestamp": timestamp,
+            "content": event['content'],
+            "timestamp": timestamp,
             }
         )
 
@@ -293,8 +293,7 @@ def get_room_chat_messages(room, page_number):
         new_page_number = int(page_number)
         if new_page_number <= p.num_pages:
             new_page_number = new_page_number + 1
-            s = LazyRoomChatMessageEncoder()
-            payload['messages'] = s.serialize(p.page(page_number).object_list)
+            payload['messages'] = PublicRoomChatMessageSerializer(p.page(page_number).object_list, many=True).data
         else:
             payload['messages'] = "None"
         payload['new_page_number'] = new_page_number
@@ -311,22 +310,24 @@ def is_user_registered_in_room(room, user):
     return True
 
 
-class LazyRoomChatMessageEncoder(Serializer):
-    def get_dump_object(self, obj):
-        dump_object = {}
-        dump_object.update({'msg_type': MSG_TYPE_MESSAGE})
-        dump_object.update({'user_id': str(obj.user.id)})
-        dump_object.update({'username': str(obj.user.username)})
-        dump_object.update({'message': str(obj.content)})
-        dump_object.update({'profile_image': str(obj.user.profile_image.url)})
-        dump_object.update({'natural_timestamp': calculate_timestamp(obj.timestamp)})
-        return dump_object
-
-
 class AccountSerializer(serializers.ModelSerializer):
     class Meta:
         model = Account
         fields = ['username', 'profile_image']
+
+
+class PublicRoomChatMessageSerializer(serializers.ModelSerializer):
+    user = AccountSerializer(many=False, read_only=True)
+    msg_type = serializers.ReadOnlyField(default=MSG_TYPE_MESSAGE)
+    timestamp = serializers.ReadOnlyField()
+    class Meta:
+        model = PublicRoomChatMessage
+        fields = '__all__'
+
+    def to_representation(self, data):
+        data = super(PublicRoomChatMessageSerializer, self).to_representation(data)
+        data['timestamp'] = calculate_timestamp(data.get('timestamp'))
+        return data
 
 
 class RoomSerializer(serializers.ModelSerializer):
