@@ -22,7 +22,10 @@
 <body>
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
   <div class="container">
-    <a class="navbar-brand" href="#">Start Bootstrap</a>
+    <a class="navbar-brand" href="{% url 'home' %}">My Chat App</a>
+      <form onsubmit="return executeQuery()">
+          <input class="navbar-" type="text" placeholder="Search for users.." name="q" id="query">
+      </form>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
@@ -56,8 +59,6 @@
 	{% endblock content %}
 </div>
 
-
-
 {% include 'snippets/footer.html' %}
 </body>
 </html>
@@ -67,5 +68,12 @@
         padding-bottom: 70px;
     }
 
-
 </style>
+
+<script>
+    function executeQuery() {
+		query = document.getElementById('query').value;
+	    window.location.replace("{% url 'search' %}?q=" + query)
+	    return false
+	}
+</script>

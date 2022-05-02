@@ -9,10 +9,6 @@ from public_chat.models import PublicChatRoom
 from django.contrib.auth.decorators import login_required
 
 
-@login_required(login_url='login')
-def chat(request):
-    return render(request, 'account/inbox.html')
-
 
 def register_view(request):
     context = {}
@@ -105,4 +101,19 @@ def user_rooms(request):
     return render(request, 'account/user_rooms.html', context)
 
 
+@login_required(login_url='login')
+def search_view(request, *args, **kwargs):
+    context = {}
+    if request.method == 'GET':
+        search_query = request.GET.get("q")
+        print(search_query)
+        if len(search_query) > 0:
+            search_result = Account.objects.filter(email__icontains=search_query).filter(
+                username__icontains=search_query).distinct()
+            accounts = []
+            for account in search_result:
+                accounts.append(account)
 
+            context['accounts'] = accounts
+
+    return render(request, 'account/search_result.html', context)
