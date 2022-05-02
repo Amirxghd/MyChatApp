@@ -61,6 +61,7 @@ def info_view(request, username):
     account = Account.objects.get(username=username)
     if account:
         context['account'] = account
+        request.session['account_id'] = account.id
         return render(request, 'account/account_info.html', context)
     else:
         return HttpResponse('does not exists')
