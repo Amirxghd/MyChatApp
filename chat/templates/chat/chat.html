@@ -58,7 +58,7 @@ PUBLIC CHAT
 					<div class="py-2 px-4 border-bottom d-none d-lg-block">
 						<div class="d-flex align-items-center py-1">
 							<div class="position-relative">
-								<img src="" class="rounded-circle mr-1" alt="Sharon Lessman" width="60" height="60" id="current-chat-image">
+                                <a href="" id="current-chat-user"><img src="" class="rounded-circle mr-1" alt="Sharon Lessman" width="60" height="60" id="current-chat-image"></a>
 							</div>
 							<div class="flex-grow-1 pl-3">
 								<strong id="current-chat-title"></strong>
@@ -278,6 +278,7 @@ body{margin-top:20px;}
         }
 
 	    document.getElementById("current-chat-image").src = image
+        document.getElementById("current-chat-user").href = "{% url 'account-info' username=-1 %}".replace('-1', username)
         document.getElementById("current-chat-title").innerHTML = username
 
         clearHighlightedFriend()
