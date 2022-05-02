@@ -20,18 +20,18 @@ PUBLIC CHAT
 					<div class="px-4 d-none d-md-block">
 						<div class="d-flex align-items-center">
 							<div class="flex-grow-1">
-								<input type="text" class="form-control my-3" placeholder="Search...">
+								<input type="text" class="form-control my-3" placeholder="Search group or users...">
 							</div>
 						</div>
 					</div>
                     <div class="user-messsages p-4" id="id_user_log">
-                        {% for user in m_and_f %}
-                            <a href="#" class="list-group-item list-group-item-action border-0" onclick="onSelectChat('{{user.friend.id}}',null, '{{ user.friend.profile_image.url }}', '{{ user.friend.username }}')" id="id_friend_container_{{user.friend.id}}">
+                        {% for private in m_and_f %}
+                            <a href="#" class="list-group-item list-group-item-action border-0" onclick="onSelectChat('{{private.room.id}}',null, '{{ private.friend.profile_image.url }}', '{{ private.friend.username }}')" id="id_friend_container_{{private.room.id}}">
 {#                                <div class="badge bg-success float-right">5</div>#}
                                 <div class="d-flex align-items-start">
-                                    <img src="{{ user.friend.profile_image.url }}" class="rounded-circle mr-1" alt="Vanessa Tucker" width="40" height="40">
+                                    <img src="{{ private.friend.profile_image.url }}" class="rounded-circle mr-1" alt="Vanessa Tucker" width="40" height="40">
                                     <div class="flex-grow-1 ml-3">
-                                        {{ user.friend.username }}
+                                        {{ private.friend.username }}
 {#                                        <div class="small"><span class="fas fa-circle chat-online"></span> Online</div>#}
                                     </div>
                                 </div>
@@ -58,14 +58,19 @@ PUBLIC CHAT
 					<div class="py-2 px-4 border-bottom d-none d-lg-block">
 						<div class="d-flex align-items-center py-1">
 							<div class="position-relative">
-								<img src="" class="rounded-circle mr-1" alt="Sharon Lessman" width="40" height="40" id="current-chat-image">
+								<img src="" class="rounded-circle mr-1" alt="Sharon Lessman" width="60" height="60" id="current-chat-image">
 							</div>
 							<div class="flex-grow-1 pl-3">
 								<strong id="current-chat-title"></strong>
 							</div>
-							<div>
-								<button class="btn btn-light border btn-lg px-3"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-more-horizontal feather-lg"><circle cx="12" cy="12" r="1"></circle><circle cx="19" cy="12" r="1"></circle><circle cx="5" cy="12" r="1"></circle></svg></button>
-							</div>
+                            <div class="btn-group dropright">
+                              <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                More
+                              </button>
+                              <div class="dropdown-menu" id="dropdown-bottom" x-placement="right-start" style="position: absolute; transform: translate3d(111px, 0px, 0px); top: 0px; left: 0px; will-change: transform;">
+                              </div>
+
+                            </div>
 						</div>
 					</div>
 
@@ -90,7 +95,30 @@ PUBLIC CHAT
 
 
 <style type="text/css">
-
+    .dropdown {
+  display: inline-block;
+  position: relative;
+}
+.dropdown-content {
+  display: none;
+  position: absolute;
+  width: 100%;
+  overflow: auto;
+  box-shadow: 0px 10px 10px 0px rgba(0,0,0,0.4);
+}
+.dropdown:hover .dropdown-content {
+  display: block;
+}
+.dropdown-content a {
+  display: block;
+  color: #000000;
+  padding: 5px;
+  text-decoration: none;
+}
+.dropdown-content a:hover {
+  color: #FFFFFF;
+  background-color: #00A4BD;
+}
 .popup {
     position:fixed;
     top:0px;
@@ -187,7 +215,38 @@ body{margin-top:20px;}
  .mr-1:hover {
      cursor: pointer;
  }
+.popup {
+    position:fixed;
+    top:0px;
+    left:0px;
+	bottom:0px;
+	right:0px;
+    margin:auto;
+    width:450px;
+    height:350px;
+    font-family:verdana;
+    font-size:13px;
+    padding:10px;
+    background-color:#282d32;
+    border:2px solid grey;
+    z-index:100000000000000000;
+}
 
+.cancel {
+    display:relative;
+    cursor:pointer;
+    margin:0;
+    float:right;
+    height:20px;
+    width:20px;
+    background-color:red;
+    text-align:center;
+    font-weight:bold;
+    font-size:15px;
+    color:white;
+    border-radius:3px;
+    z-index:100000000000000000;
+}
 </style>
 
 
@@ -200,18 +259,18 @@ body{margin-top:20px;}
 
 	function onStart(){
         {% if main_user %}
-            onSelectChat("{{main_user.id}}", null, "{{ main_user.profile_image.url }}", "{{ main_user.username }}")
+            onSelectChat("{{main_user.room.id}}", null, "{{ main_user.friend.profile_image.url }}", "{{ main_user.friend.username }}")
         {% else %}
             {% if m_and_f %}
-                onSelectChat("{{m_and_f.0.friend.id}}", null, "{{ m_and_f.0.friend.profile_image.url }}", "{{ m_and_f.0.friend.username }}")
+                onSelectChat("{{m_and_f.0.room.id}}", null, "{{ m_and_f.0.friend.profile_image.url }}", "{{ m_and_f.0.friend.username }}")
             {% endif %}
         {% endif %}
 	}
 
-	function onSelectChat(userId, groupId, image, username){
-	    if(userId != null){
-            console.log("onSelectFriend: " + userId)
-            createOrReturnPrivateChat(userId)
+	function onSelectChat(privateRoomId, groupId, image, username){
+	    if(privateRoomId != null){
+            console.log("onSelectFriend: " + privateRoomId)
+            setupWebSocket(privateRoomId, true)
         }
 	    else{
 	        console.log("onSelectGroup: " + groupId)
@@ -222,7 +281,7 @@ body{margin-top:20px;}
         document.getElementById("current-chat-title").innerHTML = username
 
         clearHighlightedFriend()
-		highlightChat(userId, groupId)
+		highlightChat(privateRoomId, groupId)
 	}
 
 	function closeWebSocket(){
@@ -235,7 +294,7 @@ body{margin-top:20px;}
 		}
 	}
 
-	function setupWebSocket(room_id, personFlag){
+	function setupWebSocket(room_id, privateOrGroup){
 
 		console.log("setupWebSocket: " + room_id)
 
@@ -247,7 +306,7 @@ body{margin-top:20px;}
 		// Correctly decide between ws:// and wss://
 		var ws_scheme = window.location.protocol == "https:" ? "wss" : "ws";
 
-		if(personFlag===true){
+		if(privateOrGroup===true){
             {% if debug_mode %}
             var ws_path = ws_scheme + '://' + window.location.host + "/private_chat/" + roomId + "/"; // development
             {% else %}
@@ -454,6 +513,9 @@ body{margin-top:20px;}
 		profileImage.width = 40
         profileImage.height = 40
 		profileImage.src = profile_image
+        profileImage.addEventListener("click", function(e){
+			 openPopup(username, profile_image)
+		})
         profileImage.alt = 'User'
 
         var div3 = document.createElement("div")
@@ -480,6 +542,9 @@ body{margin-top:20px;}
         var user = document.createElement("div")
         user.classList.add('font-weight-bold')
         user.classList.add('mb-1')
+        user.addEventListener("click", function(e){
+			 openPopup(username, profile_image)
+		})
         user.innerHTML = username
         var msg_p =document.createElement('p')
         msg_p.innerHTML = msg
@@ -611,20 +676,42 @@ body{margin-top:20px;}
 	}
 
 
-	function highlightChat(userId, groupId){
+	function highlightChat(privateRoomId, groupId){
 		// select new friend
-        if(userId != null){
-            document.getElementById("id_friend_container_" + userId).style.backgroundColor = "#282d32"
+        var dropDown = document.getElementById("dropdown-bottom")
+        if(privateRoomId != null){
+            document.getElementById("id_friend_container_" + privateRoomId).style.backgroundColor = "#282d32"
+
+
+            var a = document.createElement("a")
+            a.classList.add('dropdown-item')
+            a.href="{% url 'clear-history' private_room_id=-1 %}".replace("-1",privateRoomId)
+            a.innerHTML = "Clear chat History"
+            dropDown.appendChild(a)
+
         }
 		else{
 		    document.getElementById("id_group_container_" + groupId).style.backgroundColor = "#282d32"
+
+            var a = document.createElement("a")
+            a.classList.add('dropdown-item')
+            a.href="#"
+            a.innerHTML = "Show invite Link"
+            dropDown.appendChild(a)
+
+            var a = document.createElement("a")
+            a.classList.add('dropdown-item')
+            a.href="#"
+            a.innerHTML = "Exit group"
+            dropDown.appendChild(a)
+
         }
 	}
 
 	function clearHighlightedFriend(){
 		{% if m_and_f %}
-			{% for user in m_and_f %}
-				document.getElementById("id_friend_container_{{user.friend.id}}").style.backgroundColor = ""
+			{% for private in m_and_f %}
+				document.getElementById("id_friend_container_{{private.room.id}}").style.backgroundColor = ""
 			{% endfor %}
 		{% endif %}
         {% if groups %}
@@ -632,39 +719,42 @@ body{margin-top:20px;}
 				document.getElementById("id_group_container_{{group.group.id}}").style.backgroundColor = ""
 			{% endfor %}
 		{% endif %}
-
+        var drop = document.getElementById('dropdown-bottom')
+        drop.innerHTML = ""
 
 
 	}
 
-	function createOrReturnPrivateChat(id){
-		payload = {
-			"csrfmiddlewaretoken": "{{ csrf_token }}",
-			"user2_id": id,
-		}
-		$.ajax({
-			type: 'POST',
-			dataType: "json",
-			url: "{% url 'create-or-return-private-chat' %}", // production
-			data: payload,
-			timeout: 5000,
-			success: function(data) {
-				console.log("SUCCESS", data)
-				if(data['response'] == "Successfully got the chat."){
-					setupWebSocket(data['chatroom_id'], true)
-				}
-				else if(data['response'] != null){
-					alert(data['response'])
-				}
-			},
-			error: function(data) {
-				console.error("ERROR...", data)
-				alert("Something went wrong.")
-			},
-		});
-	}
+    function openPopup(username, profile_image) {
+        document.getElementById('test').style.display = 'block';
+        document.getElementById('popup-p').innerHTML = username;
+        document.getElementById("popup-img").src = profile_image;
+        var url = "{% url 'account-info' username=53252623623632623 %}".replace("53252623623632623", username)
+        document.getElementById("popup-profile").href = url;
+    }
+
+    function closePopup() {
+        document.getElementById('test').style.display = 'none';
+    }
 
 </script>
+
+<!--Pop up for clicking on user -->
+<div id="test" class="popup" style="display:none;">
+    <div class="cancel" onclick="closePopup();">X</div>
+    <div class="container d-flex justify-content-center align-items-center">
+        <img id="popup-img" src="https://bootdey.com/img/Content/avatar/avatar2.png" class="rounded-circle mr-1 popup-image" alt="William Harris" width="180" height="180">
+    </div>
+    <hr>
+    <div class="container d-flex justify-content-center align-items-center">
+        <p id="popup-p" style="color: whitesmoke;font-size: 20px">username</p>
+    </div>
+
+    <a id="popup-message" href=""><button class="btn btn-primary" style="float: left">Send Message</button></a>
+    <a id="popup-profile" href=""><button class="btn btn-secondary" style="float: right">View Profile</button></a>
+</div>
+
+
 
 <!-- Client Error MODAL -->
 <button type="button" id="id_trigger_client_error_modal" class="d-none btn btn-primary" data-toggle="modal" data-target="#id_client_error_modal">
