@@ -38,7 +38,7 @@ PUBLIC CHAT
                             </a>
                         {% endfor %}
                         {% for x in groups %}
-                            <a href="#" class="list-group-item list-group-item-action border-0" onclick="onSelectChat(null,'{{x.group.id}}', '{{ x.group.room_image.url }}', '{{ x.group.chat_username }}')" id="id_friend_container_{{x.group.id}}">
+                            <a href="#" class="list-group-item list-group-item-action border-0" onclick="onSelectChat(null,'{{x.group.id}}', '{{ x.group.room_image.url }}', '{{ x.group.chat_username }}')" id="id_group_container_{{x.group.id}}">
     {#                            <div class="badge bg-success float-right">5</div>#}
                                 <div class="d-flex align-items-start">
                                     <img src="{{ x.group.room_image.url }}" class="rounded-circle mr-1" alt="Vanessa Tucker" width="40" height="40">
@@ -222,7 +222,7 @@ body{margin-top:20px;}
         document.getElementById("current-chat-title").innerHTML = username
 
         clearHighlightedFriend()
-		highlightFriend(Id)
+		highlightChat(userId, groupId)
 	}
 
 	function closeWebSocket(){
@@ -611,9 +611,14 @@ body{margin-top:20px;}
 	}
 
 
-	function highlightFriend(userId){
+	function highlightChat(userId, groupId){
 		// select new friend
-		document.getElementById("id_friend_container_" + userId).style.backgroundColor = "#282d32"
+        if(userId != null){
+            document.getElementById("id_friend_container_" + userId).style.backgroundColor = "#282d32"
+        }
+		else{
+		    document.getElementById("id_group_container_" + groupId).style.backgroundColor = "#282d32"
+        }
 	}
 
 	function clearHighlightedFriend(){
@@ -624,7 +629,7 @@ body{margin-top:20px;}
 		{% endif %}
         {% if groups %}
 			{% for group in groups %}
-				document.getElementById("id_friend_container_{{group.group.id}}").style.backgroundColor = ""
+				document.getElementById("id_group_container_{{group.group.id}}").style.backgroundColor = ""
 			{% endfor %}
 		{% endif %}
 
