@@ -8,5 +8,5 @@ urlpatterns = [
     path('edit/<str:username>/', views.edit_group, name='edit_room'),
     path('remove/<str:username>/', views.remove_group, name='remove_group'),
     path('exit/<str:username>/', views.exit_group, name='exit_group'),
-    path('reset_invite_link/<str:username>/', views.reset_invite_link, name='reset_invite_link'),
+    path('reset_invite_link/<str:group_id>/', views.reset_invite_link, name='reset_invite_link'),
     ]
