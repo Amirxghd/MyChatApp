@@ -22,7 +22,7 @@ def register_view(request):
             raw_password = form.cleaned_data.get('password1')
             user = authenticate(email=email, password=raw_password)
             login(request, user)
-            return redirect('home')
+            return redirect('chat')
         else:
             context['form'] = form
             return render(request, 'account/register.html', context)
@@ -39,7 +39,7 @@ def login_view(request):
             user = authenticate(email=email, password=password)
             if user:
                 login(request, user)
-                return redirect('home')
+                return redirect('chat')
             else:
                 form.add_error('email', 'email or password is not correct')
         context['form'] = form
@@ -71,7 +71,7 @@ def info_view(request, username):
 def edit_view(request, username):
     context = {}
     if request.user.username != username:
-        return redirect('home')
+        return redirect('chat')
 
     account = Account.objects.get(username=username)
     form = AccountUpdateForm(instance=request.user)
