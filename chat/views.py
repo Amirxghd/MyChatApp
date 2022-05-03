@@ -31,12 +31,14 @@ def chat_view(request, *args, **kwargs):
             }
 
     # 1. Find all the users private chats
-    private_rooms1 = PrivateChatRoom.objects.filter(user1=request.user)
-    private_rooms2 = PrivateChatRoom.objects.filter(user2=request.user)
-    group_room = user.registered_users.all()
+    private_rooms1 = PrivateChatRoom.objects.filter(user1=user)
+    private_rooms2 = PrivateChatRoom.objects.filter(user2=user)
+    group_room1 = user.registered_users.all()
+    group_room2 = PublicChatRoom.objects.filter(owner=user)
 
     # 2. merge the lists
     private_rooms = private_rooms1.union(private_rooms2)
+    group_rooms = group_room1.union(group_room2)
 
     m_and_f = []
     for room in private_rooms:
@@ -52,7 +54,7 @@ def chat_view(request, *args, **kwargs):
     context['m_and_f'] = m_and_f
 
     groups = []
-    for room in group_room:
+    for room in group_rooms:
         groups.append({
             'message': "",
             'group': room
