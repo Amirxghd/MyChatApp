@@ -5,6 +5,7 @@ from .forms import CreatePublicRoom, GroupEditForm
 from django.utils.crypto import get_random_string
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
+from django.contrib import messages
 
 DEBUG = False
 
@@ -85,16 +86,17 @@ def edit_group(request, username):
 
 
 @login_required(login_url='login')
-def reset_invite_link(request, username):
+def reset_invite_link(request, group_id):
     try:
-        group = PublicChatRoom.objects.get(chat_username=username)
+        group = PublicChatRoom.objects.get(id=group_id)
         if group.owner != request.user:
-            return redirect('user_rooms')
+            messages.add_message(request, messages.INFO, "You can't reset invite link, you are not Admin!")
+            return redirect('chat')
         group.invite_link = get_random_string(48)
         group.save()
     except PublicChatRoom.DoesNotExist:
         pass
-    return redirect('user_rooms')
+    return redirect('chat')
 
 
 @login_required(login_url='login')
