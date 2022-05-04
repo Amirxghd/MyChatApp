@@ -7,6 +7,7 @@ from django.contrib.auth.decorators import login_required
 from account.models import Account
 from itertools import chain
 import json
+from django.db.models import Q
 
 DEBUG = False
 
@@ -30,11 +31,24 @@ def chat_view(request, *args, **kwargs):
                 'room': room
             }
 
-    # 1. Find all the users private chats
+    search_query = request.POST.get('q-chat')
+
     private_rooms1 = PrivateChatRoom.objects.filter(user1=user)
     private_rooms2 = PrivateChatRoom.objects.filter(user2=user)
+
+
     group_room1 = user.registered_users.all()
     group_room2 = PublicChatRoom.objects.filter(owner=user)
+
+    if search_query:
+        # 1. Find all the users private chats
+
+        private_rooms1 = private_rooms1.filter(user2__username__icontains=search_query)
+        private_rooms2 = private_rooms2.filter(user1__username__icontains=search_query)
+
+        group_room1 = group_room1.filter(chat_username__icontains=search_query)
+        group_room2 = group_room2.filter(chat_username__icontains=search_query)
+
 
     # 2. merge the lists
     private_rooms = private_rooms1.union(private_rooms2)

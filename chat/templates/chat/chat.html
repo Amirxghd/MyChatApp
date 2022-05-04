@@ -35,7 +35,10 @@ PUBLIC CHAT
 					<div class="px-4 d-none d-md-block">
 						<div class="d-flex align-items-center">
 							<div class="flex-grow-1">
-								<input type="text" class="form-control my-3" placeholder="Search group or users...">
+                                  <form method="post">
+                                      {% csrf_token %}
+                                      <input class="form-control my-3" type="text" placeholder="Search group or users..." name="q-chat">
+                                  </form>
 							</div>
 						</div>
                         <div>
