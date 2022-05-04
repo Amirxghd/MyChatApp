@@ -46,23 +46,29 @@ def join_to_group(request, invite_link):
 
 
 @login_required(login_url='login')
-def edit_group(request, username):
+def edit_group(request, group_id):
+
+    request.session.pop('account_id', None)
+
     context = {}
+
     try:
-        group = PublicChatRoom.objects.get(chat_username=username)
+        group = PublicChatRoom.objects.get(id=group_id)
     except PublicChatRoom.DoesNotExist:
-        return redirect('user_rooms')
+        return redirect('chat')
+
+    request.session['group_id'] = group_id
 
     if request.user != group.owner:
-        return redirect('user_rooms')
+        messages.add_message(request, messages.INFO, "You can't edit, You are not Admin")
+        return redirect('chat')
     form = GroupEditForm(instance=group, owner_id=group.owner.id)
     if request.method == 'POST':
         form = GroupEditForm(request.POST, request.FILES, instance=group, owner_id=group.owner.id)
         if form.is_valid():
             form.save()
-            return redirect('user_rooms')
-        else:
-            print(form.errors)
+            return redirect('chat')
+
 
     context['form'] = form
     context['group'] = group
@@ -71,17 +77,20 @@ def edit_group(request, username):
 
 @login_required(login_url='login')
 def reset_invite_link(request, group_id):
+    request.session.pop('account_id', None)
     try:
         group = PublicChatRoom.objects.get(id=group_id)
         if group.owner != request.user:
             messages.add_message(request, messages.INFO, "You can't reset invite link, you are not Admin!")
+            request.session['group_id'] = group_id
             return redirect('chat')
         group.invite_link = get_random_string(48)
         group.save()
         invite_link_url = 'New Invite Link: ' + settings.BASE_DIR + group.get_absolute_url()
         messages.add_message(request, messages.INFO, invite_link_url)
     except PublicChatRoom.DoesNotExist:
-        pass
+        return HttpResponse('group does not exists')
+    request.session['group_id'] = group_id
     return redirect('chat')
 
 
@@ -108,13 +117,17 @@ def show_invite_link(request, group_id):
 
     invite_link_url = settings.BASE_DIR + group.get_absolute_url()
     messages.add_message(request, messages.INFO, invite_link_url)
+    request.session['group_id'] = group_id
+    request.session.pop('account_id', None)
     return redirect('chat')
 
 
 def show_members(request, group_id):
+    request.session.pop('account_id', None)
     context = {}
     try:
         group = PublicChatRoom.objects.get(id=group_id)
+        request.session['group_id'] = group_id
     except PublicChatRoom.DoesNotExist:
         return HttpResponse('Group does not exists!')
 

@@ -18,6 +18,7 @@ def chat_view(request, *args, **kwargs):
     user = request.user
 
     account_id = request.session.get('account_id')
+    group_id = request.session.get('group_id')
 
     if account_id:
         try:
@@ -30,6 +31,15 @@ def chat_view(request, *args, **kwargs):
                 'friend': other_user,
                 'room': room
             }
+    if group_id:
+        try:
+            room = PublicChatRoom.objects.get(id=group_id)
+        except PublicChatRoom.DoesNotExist:
+            return HttpResponse('Group does not exists')
+
+        context['main_group'] = {
+            'room': room
+        }
 
     search_query = request.POST.get('q-chat')
 

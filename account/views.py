@@ -57,6 +57,7 @@ def logout_view(request):
 
 @login_required(login_url='login')
 def info_view(request, username):
+    request.session.pop('group_id', None)
     context = {}
     account = Account.objects.get(username=username)
     if account:
@@ -80,8 +81,7 @@ def edit_view(request, username):
         if form.is_valid():
             form.save()
             return redirect('account-info', username=account.username)
-        else:
-            print(form.errors)
+
 
     context['form'] = form
     context['account'] = account
