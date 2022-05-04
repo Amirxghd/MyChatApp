@@ -48,24 +48,20 @@ PUBLIC CHAT
                     <div class="user-messsages p-4" id="id_user_log">
                         {% for private in m_and_f %}
                             <a href="#" class="list-group-item list-group-item-action border-0" onclick="onSelectChat('{{private.room.id}}',null, '{{ private.friend.profile_image.url }}', '{{ private.friend.username }}')" id="id_friend_container_{{private.room.id}}">
-{#                                <div class="badge bg-success float-right">5</div>#}
                                 <div class="d-flex align-items-start">
                                     <img src="{{ private.friend.profile_image.url }}" class="rounded-circle mr-1" alt="Vanessa Tucker" width="40" height="40">
                                     <div class="flex-grow-1 ml-3">
                                         {{ private.friend.username }}
-{#                                        <div class="small"><span class="fas fa-circle chat-online"></span> Online</div>#}
                                     </div>
                                 </div>
                             </a>
                         {% endfor %}
                         {% for x in groups %}
-                            <a href="#" class="list-group-item list-group-item-action border-0" onclick="onSelectChat(null,'{{x.group.id}}', '{{ x.group.room_image.url }}', '{{ x.group.chat_username }}')" id="id_group_container_{{x.group.id}}">
-    {#                            <div class="badge bg-success float-right">5</div>#}
+                            <a href="#" class="list-group-item list-group-item-action border-0" onclick="onSelectChat(null,'{{x.group.id}}', '{{ x.group.room_image.url }}', '{{ x.group.title }}')" id="id_group_container_{{x.group.id}}">
                                 <div class="d-flex align-items-start">
                                     <img src="{{ x.group.room_image.url }}" class="rounded-circle mr-1" alt="Vanessa Tucker" width="40" height="40">
                                     <div class="flex-grow-1 ml-3">
-                                        {{ x.group.chat_username }}
-        {#                                <div class="small"><span class="fas fa-circle chat-online"></span> Online</div>#}
+                                        {{ x.group.title }}
                                     </div>
                                 </div>
                             </a>
@@ -281,6 +277,8 @@ body{margin-top:20px;}
 	function onStart(){
         {% if main_user %}
             onSelectChat("{{main_user.room.id}}", null, "{{ main_user.friend.profile_image.url }}", "{{ main_user.friend.username }}")
+        {% elif main_group %}
+            onSelectChat(null,"{{ main_group.room.id }}" , "{{main_group.room.room_image.url}}", "{{ main_group.room.title }}")
         {% else %}
             {% if m_and_f %}
                 onSelectChat("{{m_and_f.0.room.id}}", null, "{{ m_and_f.0.friend.profile_image.url }}", "{{ m_and_f.0.friend.username }}")
@@ -736,9 +734,15 @@ body{margin-top:20px;}
 
             var a4 = document.createElement("a")
             a4.classList.add('dropdown-item')
-            a4.href="{% url 'remove_or_exit_group' group_id='-1' %}".replace('-1', groupId)
-            a4.innerHTML = "Exit/Remove group"
+            a4.href="{% url 'edit_room' group_id='-1' %}".replace('-1', groupId)
+            a4.innerHTML = "Edit group"
             dropDown.appendChild(a4)
+
+            var a5 = document.createElement("a")
+            a5.classList.add('dropdown-item')
+            a5.href="{% url 'remove_or_exit_group' group_id='-1' %}".replace('-1', groupId)
+            a5.innerHTML = "Exit/Remove group"
+            dropDown.appendChild(a5)
 
         }
 	}
