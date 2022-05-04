@@ -60,7 +60,7 @@ def edit_group(request, group_id):
     request.session['group_id'] = group_id
 
     if request.user != group.owner:
-        messages.add_message(request, messages.INFO, "You can't edit, You are not Admin")
+        messages.add_message(request, messages.ERROR, "You can't edit, You are not Admin")
         return redirect('chat')
     form = GroupEditForm(instance=group, owner_id=group.owner.id)
     if request.method == 'POST':
@@ -81,13 +81,13 @@ def reset_invite_link(request, group_id):
     try:
         group = PublicChatRoom.objects.get(id=group_id)
         if group.owner != request.user:
-            messages.add_message(request, messages.INFO, "You can't reset invite link, you are not Admin!")
+            messages.add_message(request, messages.ERROR, "You can't reset invite link, you are not Admin!")
             request.session['group_id'] = group_id
             return redirect('chat')
         group.invite_link = get_random_string(48)
         group.save()
         invite_link_url = 'New Invite Link: ' + settings.BASE_DIR + group.get_absolute_url()
-        messages.add_message(request, messages.INFO, invite_link_url)
+        messages.add_message(request, messages.SUCCESS, invite_link_url)
     except PublicChatRoom.DoesNotExist:
         return HttpResponse('group does not exists')
     request.session['group_id'] = group_id
