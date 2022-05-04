@@ -78,6 +78,8 @@ def reset_invite_link(request, group_id):
             return redirect('chat')
         group.invite_link = get_random_string(48)
         group.save()
+        invite_link_url = 'New Invite Link: ' + settings.BASE_DIR + group.get_absolute_url()
+        messages.add_message(request, messages.INFO, invite_link_url)
     except PublicChatRoom.DoesNotExist:
         pass
     return redirect('chat')
@@ -118,7 +120,7 @@ def show_members(request, group_id):
 
     group_users = group.registered_users.all()
     context['users'] = group_users
-    return render(request, 'public_chat/group_users.html', context)
+    return render(request, 'account/search_and_groupUsers.html', context)
 
 
 
