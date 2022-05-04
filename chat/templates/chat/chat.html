@@ -38,6 +38,9 @@ PUBLIC CHAT
 								<input type="text" class="form-control my-3" placeholder="Search group or users...">
 							</div>
 						</div>
+                        <div>
+                            <a href="{% url 'create_group' %}"><button class="btn btn-secondary">Create Group +</button></a>
+                        </div>
 					</div>
                     <div class="user-messsages p-4" id="id_user_log">
                         {% for private in m_and_f %}
