@@ -59,7 +59,7 @@
                                             <h4>Your Room invite link is:</h4>
                                             <a href="{{ invite_link }}">{{ invite_link}}</a>
                                             <br>
-                                            <a href="{% url 'group_chat' username=room.chat_username %}"><button type="submit" class="btn btn-lg btn-primary">Go to Room</button></a>
+                                            <a href="{% url 'chat' %}"><button type="submit" class="btn btn-lg btn-primary">Go to Room</button></a>
 										</div>
                                     {% endif %}
 									</form>
