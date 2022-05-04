@@ -56,9 +56,10 @@ def chat_view(request, *args, **kwargs):
         private_rooms1 = private_rooms1.filter(user2__username__icontains=search_query)
         private_rooms2 = private_rooms2.filter(user1__username__icontains=search_query)
 
-        group_room1 = group_room1.filter(chat_username__icontains=search_query)
-        group_room2 = group_room2.filter(chat_username__icontains=search_query)
+        group_room1 = group_room1.filter(Q(chat_username__icontains=search_query)|Q(title__icontains=search_query))
+        group_room2 = group_room2.filter(Q(chat_username__icontains=search_query)|Q(title__icontains=search_query))
 
+        context['search_query'] = search_query
 
     # 2. merge the lists
     private_rooms = private_rooms1.union(private_rooms2)
