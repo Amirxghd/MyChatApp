@@ -27,7 +27,7 @@
                             <img alt="Alexa's avatar" src="{{ room.room_image.url }}" class="h-4 w-4" />
                         </span>
                         <span class="text-default-d3 text-90 text-600">
-                            <a href="{% url 'group_chat' username=room.chat_username %}">{{ room.title }}</a>
+                            <a href="{% url 'chat' %}">{{ room.title }}</a>
                         </span>
 
 
@@ -38,18 +38,18 @@
                             </span>
                                 <br>
                              <span class="text-80">
-                                <a href="{% url 'remove_group' room.chat_username%}">Delete Room</a>
+                                <a href="{% url 'remove_or_exit_group' room.id %}">Delete Room</a>
                             </span>
                                 <br>
                             <span class="text-80">
-                                <a href="{% url 'reset_invite_link' username=room.chat_username %}">Reset Invite Link</a>
+                                <a href="{% url 'reset_invite_link' group_id=room.id %}">Reset Invite Link</a>
                             </span>
                                 <br>
                             <input type="button" value="Show Invite link" onclick="onButtonClick({{ forloop.counter}})" />
                                 <br>
                             {% else %}
                             <span class="text-80">
-                                <a href="{% url 'exit_group' username=room.chat_username %}">Exit group</a>
+                                <a href="{% url 'remove_or_exit_group' group_id=room.id %}">Exit group</a>
                             </span>
                                 <br>
 
