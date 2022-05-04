@@ -11,22 +11,6 @@ DEBUG = False
 
 
 @login_required(login_url='login')
-def group_chat(request, username):
-    context = {'debug_mode': settings.DEBUG, 'debug': DEBUG, 'username': request.user.username}
-    try:
-        room = PublicChatRoom.objects.get(chat_username=username)
-        if request.user in room.registered_users.all() or request.user == room.owner:
-            context['room_id'] = room.id
-            context['room'] = room
-            return render(request, "public_chat/public_chat.html", context)
-        else:
-            return HttpResponse('You are not allowed to chat in this Room. (You are not registered for this group)')
-
-    except PublicChatRoom.DoesNotExist:
-        return redirect('home')
-
-
-@login_required(login_url='login')
 def create_group(request):
     user = request.user
     context = {}
@@ -39,7 +23,7 @@ def create_group(request):
             invite_link = get_random_string(48)
             form.instance.invite_link = invite_link
             form.save()
-            invite_url = 'http://127.0.0.1:8000' + reverse('join_group', kwargs={'invite_link': invite_link})
+            invite_url = settings.BASE_DIR + reverse('join_group', kwargs={'invite_link': invite_link})
             return render(request, 'public_chat/create_room_form.html', {'invite_link': invite_url, 'room': form.instance})
 
     context['form'] = form
@@ -58,7 +42,7 @@ def join_to_group(request, invite_link):
             return redirect('group_chat', username=group.chat_username)
     except PublicChatRoom.DoesNotExist:
         context['messgae'] = 'room does not exist'
-    return redirect('home')
+    return redirect('chat')
 
 
 @login_required(login_url='login')
@@ -100,27 +84,41 @@ def reset_invite_link(request, group_id):
 
 
 @login_required(login_url='login')
-def remove_group(request, username):
+def remove_or_exit_group(request, group_id):
     try:
-        group = PublicChatRoom.objects.get(chat_username=username)
+        group = PublicChatRoom.objects.get(id=group_id)
         if group.owner == request.user:
             group.delete()
-
+        else:
+            group.registered_users.remove(request.user)
     except PublicChatRoom.DoesNotExist:
-        pass
+        return HttpResponse('Group does not exists!')
 
-    return redirect('user_rooms')
+    return redirect('chat')
 
 
-def exit_group(request, username):
+@login_required(login_url='login')
+def show_invite_link(request, group_id):
     try:
-        group = PublicChatRoom.objects.get(chat_username=username)
-        group.registered_users.remove(request.user)
-
+        group = PublicChatRoom.objects.get(id=group_id)
     except PublicChatRoom.DoesNotExist:
-        pass
+        return HttpResponse('Group does not exists!')
 
-    return redirect('user_rooms')
+    invite_link_url = settings.BASE_DIR + group.get_absolute_url()
+    messages.add_message(request, messages.INFO, invite_link_url)
+    return redirect('chat')
+
+
+def show_members(request, group_id):
+    context = {}
+    try:
+        group = PublicChatRoom.objects.get(id=group_id)
+    except PublicChatRoom.DoesNotExist:
+        return HttpResponse('Group does not exists!')
+
+    group_users = group.registered_users.all()
+    context['users'] = group_users
+    return render(request, 'public_chat/group_users.html', context)
 
 
 
