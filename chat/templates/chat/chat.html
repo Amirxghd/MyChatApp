@@ -9,9 +9,24 @@ PUBLIC CHAT
 <br>
 
 
-<main class="content">
-    <div class="container p-0">
 
+
+<main class="content">
+
+    <div class="container p-0">
+            <!-- Django messages -->
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="container-fluid p-0">
+                      <div class="alert {{ message.tags }} alert-dismissible" role="alert" >
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                          <span aria-hidden="True">&times;</span>
+                        </button>
+                        {{ message }}
+                      </div>
+                    </div>
+                {% endfor %}
+            {% endif %}
 
 		<div class="card">
 			<div class="row g-0">
@@ -267,19 +282,20 @@ body{margin-top:20px;}
         {% endif %}
 	}
 
-	function onSelectChat(privateRoomId, groupId, image, username){
+	function onSelectChat(privateRoomId, groupId, image, name){
 	    if(privateRoomId != null){
             console.log("onSelectFriend: " + privateRoomId)
             setupWebSocket(privateRoomId, true)
+            document.getElementById("current-chat-user").href = "{% url 'account-info' username=-1 %}".replace('-1', name)
         }
 	    else{
 	        console.log("onSelectGroup: " + groupId)
             setupWebSocket(groupId, false)
+            document.getElementById("current-chat-user").href = "#"
         }
 
 	    document.getElementById("current-chat-image").src = image
-        document.getElementById("current-chat-user").href = "{% url 'account-info' username=-1 %}".replace('-1', username)
-        document.getElementById("current-chat-title").innerHTML = username
+        document.getElementById("current-chat-title").innerHTML = name
 
         clearHighlightedFriend()
 		highlightChat(privateRoomId, groupId)
@@ -684,27 +700,39 @@ body{margin-top:20px;}
             document.getElementById("id_friend_container_" + privateRoomId).style.backgroundColor = "#282d32"
 
 
-            var a = document.createElement("a")
-            a.classList.add('dropdown-item')
-            a.href="{% url 'clear-history' private_room_id=-1 %}".replace("-1",privateRoomId)
-            a.innerHTML = "Clear chat History"
-            dropDown.appendChild(a)
+            var a1 = document.createElement("a")
+            a1.classList.add('dropdown-item')
+            a1.href="{% url 'clear-history' private_room_id=-1 %}".replace("-1",privateRoomId)
+            a1.innerHTML = "Clear chat History"
+            dropDown.appendChild(a1)
 
         }
 		else{
 		    document.getElementById("id_group_container_" + groupId).style.backgroundColor = "#282d32"
 
-            var a = document.createElement("a")
-            a.classList.add('dropdown-item')
-            a.href="#"
-            a.innerHTML = "Show invite Link"
-            dropDown.appendChild(a)
+            var a1 = document.createElement("a")
+            a1.classList.add('dropdown-item')
+            a1.href="{% url 'show_invite_link' group_id='-1' %}".replace('-1', groupId)
+            a1.innerHTML = "Show invite Link"
+            dropDown.appendChild(a1)
 
-            var a = document.createElement("a")
-            a.classList.add('dropdown-item')
-            a.href="#"
-            a.innerHTML = "Exit group"
-            dropDown.appendChild(a)
+            var a2 = document.createElement("a")
+            a2.classList.add('dropdown-item')
+            a2.href="{% url 'reset_invite_link' group_id='-1' %}".replace('-1', groupId)
+            a2.innerHTML = "Reset Invite Link"
+            dropDown.appendChild(a2)
+
+            var a3 = document.createElement("a")
+            a3.classList.add('dropdown-item')
+            a3.href="{% url 'show_members' group_id='-1' %}".replace('-1', groupId)
+            a3.innerHTML = "Show Members"
+            dropDown.appendChild(a3)
+
+            var a4 = document.createElement("a")
+            a4.classList.add('dropdown-item')
+            a4.href="{% url 'remove_or_exit_group' group_id='-1' %}".replace('-1', groupId)
+            a4.innerHTML = "Exit/Remove group"
+            dropDown.appendChild(a4)
 
         }
 	}
