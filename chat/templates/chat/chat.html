@@ -37,7 +37,7 @@ PUBLIC CHAT
 							<div class="flex-grow-1">
                                   <form method="post">
                                       {% csrf_token %}
-                                      <input class="form-control my-3" type="text" placeholder="Search group or users..." name="q-chat">
+                                      <input class="form-control my-3" type="text" placeholder="Search group or users..." name="q-chat" value="{% if search_query %}{{ search_query }}{% endif %}">
                                   </form>
 							</div>
 						</div>
