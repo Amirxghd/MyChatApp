@@ -46,7 +46,7 @@ PUBLIC CHAT
                         </div>
 					</div>
                     <div class="user-messsages p-4" id="id_user_log">
-                        {% for private in m_and_f %}
+                        {% for private in privates %}
                             <a href="#" class="list-group-item list-group-item-action border-0" onclick="onSelectChat('{{private.room.id}}',null, '{{ private.friend.profile_image.url }}', '{{ private.friend.username }}')" id="id_friend_container_{{private.room.id}}">
                                 <div class="d-flex align-items-start">
                                     <img src="{{ private.friend.profile_image.url }}" class="rounded-circle mr-1" alt="Vanessa Tucker" width="40" height="40">
@@ -62,6 +62,9 @@ PUBLIC CHAT
                                     <img src="{{ x.group.room_image.url }}" class="rounded-circle mr-1" alt="Vanessa Tucker" width="40" height="40">
                                     <div class="flex-grow-1 ml-3">
                                         {{ x.group.title }}
+                                        {% if x.group.owner == auth_user %}
+                                            <div class="small" style="color: darkkhaki">Admin</div>
+                                        {% endif %}
                                     </div>
                                 </div>
                             </a>
@@ -280,9 +283,12 @@ body{margin-top:20px;}
         {% elif main_group %}
             onSelectChat(null,"{{ main_group.room.id }}" , "{{main_group.room.room_image.url}}", "{{ main_group.room.title }}")
         {% else %}
-            {% if m_and_f %}
-                onSelectChat("{{m_and_f.0.room.id}}", null, "{{ m_and_f.0.friend.profile_image.url }}", "{{ m_and_f.0.friend.username }}")
+            {% if privates %}
+                onSelectChat("{{privates.0.room.id}}", null, "{{ privates.0.friend.profile_image.url }}", "{{ privates.0.friend.username }}")
+            {% elif groups %}
+                onSelectChat(null,"{{ groups.0.group.id }}" , "{{groups.0.group.room_image.url}}", "{{ main_group.group.title }}")
             {% endif %}
+
         {% endif %}
 	}
 
@@ -748,8 +754,8 @@ body{margin-top:20px;}
 	}
 
 	function clearHighlightedFriend(){
-		{% if m_and_f %}
-			{% for private in m_and_f %}
+		{% if privates %}
+			{% for private in privates %}
 				document.getElementById("id_friend_container_{{private.room.id}}").style.backgroundColor = ""
 			{% endfor %}
 		{% endif %}
