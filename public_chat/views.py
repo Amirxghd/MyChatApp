@@ -39,7 +39,7 @@ def join_to_group(request, invite_link):
         group = PublicChatRoom.objects.get(invite_link=invite_link)
         if user not in group.registered_users.all() and user != group.owner:
             group.registered_users.add(user)
-            return redirect('group_chat', username=group.chat_username)
+            return redirect('chat')
     except PublicChatRoom.DoesNotExist:
         context['messgae'] = 'room does not exist'
     return redirect('chat')
@@ -54,10 +54,9 @@ def edit_group(request, group_id):
 
     try:
         group = PublicChatRoom.objects.get(id=group_id)
+        request.session['group_id'] = group_id
     except PublicChatRoom.DoesNotExist:
         return redirect('chat')
-
-    request.session['group_id'] = group_id
 
     if request.user != group.owner:
         messages.add_message(request, messages.ERROR, "You can't edit, You are not Admin")

@@ -22,7 +22,7 @@ def register_view(request):
             raw_password = form.cleaned_data.get('password1')
             user = authenticate(email=email, password=raw_password)
             login(request, user)
-            return redirect('chat')
+            return redirect('edit-account')
         else:
             context['form'] = form
             return render(request, 'account/register.html', context)
@@ -86,20 +86,6 @@ def edit_view(request, username):
     context['form'] = form
     context['account'] = account
     return render(request, 'account/account_edit.html', context)
-
-
-@login_required(login_url='login')
-def user_rooms(request):
-    context = {}
-    user = request.user
-    user_owners = PublicChatRoom.objects.filter(owner=user)
-    user_rooms = user.registered_users.all()
-
-    q = user_rooms.union(user_owners)
-
-    context['rooms'] = q
-    context['domain'] = settings.BASE_DIR
-    return render(request, 'account/user_rooms.html', context)
 
 
 @login_required(login_url='login')

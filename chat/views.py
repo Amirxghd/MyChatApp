@@ -76,12 +76,11 @@ def chat_view(request, *args, **kwargs):
             'friend': friend,
             'room': room,
         })
-    context['m_and_f'] = m_and_f
+    context['privates'] = m_and_f
 
     groups = []
     for room in group_rooms:
         groups.append({
-            'message': "",
             'group': room
         })
 
@@ -89,7 +88,8 @@ def chat_view(request, *args, **kwargs):
 
     context['debug'] = DEBUG
     context['debug_mode'] = settings.DEBUG
-    context['username'] = request.user.username
+    context['username'] = user.username
+    context['auth_user'] = user
     return render(request, "chat/chat.html", context)
 
 
