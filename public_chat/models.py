@@ -18,7 +18,7 @@ def get_default_profile_image():
 
 class PublicChatRoom(models.Model):
 
-    owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='owner')
+    owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='owner', blank=True, null=True)
     title = models.CharField(max_length=255, blank=False, null=False)
     chat_username = models.CharField(max_length=255, unique=True, blank=False, null=False, default='')
     invite_link = models.CharField(max_length=255,  blank=True, null=True)
