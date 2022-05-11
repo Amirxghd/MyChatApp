@@ -82,10 +82,10 @@ class Skill(models.Model):
     owner = models.ForeignKey(Account, on_delete=models.CASCADE)
     title = models.CharField(max_length=50, blank=False, null=False)
     level = models.IntegerField(validators=[
-        MaxValueValidator(100),MinValueValidator(1)]
+        MaxValueValidator(100), MinValueValidator(1)]
     )
 
     def __str__(self):
-        return str(self.owner.id) + self.title
+        return str(self.owner) + self.title
 
 

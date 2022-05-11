@@ -52,7 +52,7 @@ class AccountUpdateForm(forms.ModelForm):
         self.fields['full_name'].widget.attrs.update({'class': 'form-control'})
         self.fields['username'].widget.attrs.update({'class': 'form-control'})
         self.fields['bio'].widget.attrs.update({'class': 'form-control', 'row': 5})
-        self.fields['profile_image'].widget.attrs.update({'class': 'btn btn-primary'})
+        self.fields['profile_image'].widget.attrs.update({'class': 'btn btn-secondary'})
         # self.fields['hide_email'].widget.attrs.update({'class': 'custom-control-input'})
 
 
