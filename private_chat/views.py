@@ -1,13 +1,7 @@
 from django.shortcuts import render, redirect
-from django.conf import settings
 from .models import PrivateChatRoom, PrivateRoomChatMessage
 from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
-from account.models import Account
-from itertools import chain
-import json
-
-DEBUG = False
 
 
 @login_required(login_url='login')
