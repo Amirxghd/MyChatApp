@@ -60,7 +60,7 @@
                 {% if request.user == account %}
                   <div class="row">
                     <div class="col-sm-12">
-                      <a class="btn btn-info " target="__blank" href="{% url 'edit-account' account.username %}">Edit</a>
+                      <a class="btn btn-info " href="{% url 'edit-account' account.username %}">Edit</a>
                     </div>
                   </div>
                 {% endif %}
