@@ -278,15 +278,15 @@ body{margin-top:20px;}
 	onStart()
 
 	function onStart(){
-        {% if main_user %}
-            onSelectChat("{{main_user.room.id}}", null, "{{ main_user.friend.profile_image.url }}", "{{ main_user.friend.username }}")
-        {% elif main_group %}
-            onSelectChat(null,"{{ main_group.room.id }}" , "{{main_group.room.room_image.url}}", "{{ main_group.room.title }}")
+        {% if start_upp_user %}
+            onSelectChat("{{start_upp_user.room.id}}", null, "{{ start_upp_user.friend.profile_image.url }}", "{{ start_upp_user.friend.username }}")
+        {% elif start_upp_group %}
+            onSelectChat(null,"{{ start_upp_group.room.id }}" , "{{start_upp_group.room.room_image.url}}", "{{ start_upp_group.room.title }}")
         {% else %}
             {% if privates %}
                 onSelectChat("{{privates.0.room.id}}", null, "{{ privates.0.friend.profile_image.url }}", "{{ privates.0.friend.username }}")
             {% elif groups %}
-                onSelectChat(null,"{{ groups.0.group.id }}" , "{{groups.0.group.room_image.url}}", "{{ main_group.group.title }}")
+                onSelectChat(null,"{{ groups.0.group.id }}" , "{{groups.0.group.room_image.url}}", "{{ start_upp_group.group.title }}")
             {% endif %}
 
         {% endif %}
