@@ -1,15 +1,14 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render
 from django.conf import settings
-from private_chat.models import PrivateChatRoom, PrivateRoomChatMessage
+from private_chat.models import PrivateChatRoom
 from public_chat.models import PublicChatRoom
 from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
 from account.models import Account
-from itertools import chain
-import json
 from django.db.models import Q
 
 DEBUG = False
+
 
 @login_required(login_url='login')
 def chat_view(request, *args, **kwargs):
@@ -17,8 +16,9 @@ def chat_view(request, *args, **kwargs):
     context = {}
     user = request.user
 
-    account_id = request.session.get('account_id')
-    group_id = request.session.get('group_id')
+    account_id = request.POST.get('account_id')
+    if not account_id:
+        account_id = request.session.get('account_id')
 
     if account_id:
         try:
@@ -27,17 +27,19 @@ def chat_view(request, *args, **kwargs):
             return HttpResponse('account does not exists')
         if other_user != request.user:
             room = find_or_create_private_chat(request.user, other_user)
-            context['main_user'] = {
+            context['start_upp_user'] = {
                 'friend': other_user,
                 'room': room
             }
+
+    group_id = request.session.get('group_id')
     if group_id:
         try:
             room = PublicChatRoom.objects.get(id=group_id)
         except PublicChatRoom.DoesNotExist:
             return HttpResponse('Group does not exists')
 
-        context['main_group'] = {
+        context['start_upp_group'] = {
             'room': room
         }
 
@@ -65,18 +67,18 @@ def chat_view(request, *args, **kwargs):
     private_rooms = private_rooms1.union(private_rooms2)
     group_rooms = group_room1.union(group_room2)
 
-    m_and_f = []
+    privates = []
     for room in private_rooms:
         # Figure out which user is the "other user" (aka friend)
         if room.user1 == request.user:
             friend = room.user2
         else:
             friend = room.user1
-        m_and_f.append({
+        privates.append({
             'friend': friend,
             'room': room,
         })
-    context['privates'] = m_and_f
+    context['privates'] = privates
 
     groups = []
     for room in group_rooms:
