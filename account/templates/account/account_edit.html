@@ -87,41 +87,23 @@
 
                       </div>
                     </div>
-                     <div class="row gutters-sm">
-                        <div class="col-12">
-                          <div class="card h-100">
-                            <div class="card-body">
-                              <h6 class="d-flex align-items-center mb-3">Skills</h6>
-                              <small>Django</small>
-                              <div class="progress mb-3" style="height: 5px">
-                                <div class="progress-bar bg-primary" role="progressbar" style="width: 80%" aria-valuenow="80" aria-valuemin="0" aria-valuemax="100"></div>
-                              </div>
-                              <small>Website Markup</small>
-                              <div class="progress mb-3" style="height: 5px">
-                                <div class="progress-bar bg-primary" role="progressbar" style="width: 72%" aria-valuenow="72" aria-valuemin="0" aria-valuemax="100"></div>
-                              </div>
-                              <small>One Page</small>
-                              <div class="progress mb-3" style="height: 5px">
-                                <div class="progress-bar bg-primary" role="progressbar" style="width: 89%" aria-valuenow="89" aria-valuemin="0" aria-valuemax="100"></div>
-                              </div>
-                              <small>Mobile Template</small>
-                              <div class="progress mb-3" style="height: 5px">
-                                <div class="progress-bar bg-primary" role="progressbar" style="width: 55%" aria-valuenow="55" aria-valuemin="0" aria-valuemax="100"></div>
-                              </div>
-                              <small>Backend API</small>
-                              <div class="progress mb-3" style="height: 5px">
-                                <div class="progress-bar bg-primary" role="progressbar" style="width: 66%" aria-valuenow="66" aria-valuemin="0" aria-valuemax="100"></div>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
                     <div class="row">
                       <div class="col d-flex justify-content-end">
-                        <button class="btn btn-primary" type="submit">Save Changes</button>
+                        <button class="btn btn-primary" type="submit" name="full_form">Save Changes/ back to Account</button>
                       </div>
                     </div>
                   </form>
+                     <h5>Add skills</h5>
+                      <form action="" method="post">
+                          {% csrf_token %}
+                          <div class="form-group">
+                              <label>Skill Title: </label>
+                              <input type="text" name="title" placeholder="Skill Title">
+                              <label>Skill Level: </label>
+                              <input type="text" name="level" placeholder="Skill level 0-100">
+                              <button class="btn btn-primary" type="submit" name="skill_form">Add Skill</button>
+                          </div>
+                      </form>
 
                 </div>
               </div>
