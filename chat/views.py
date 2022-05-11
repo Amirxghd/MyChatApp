@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.conf import settings
-from PrivateChat.models import PrivateChatRoom, PrivateRoomChatMessage
+from private_chat.models import PrivateChatRoom, PrivateRoomChatMessage
 from public_chat.models import PublicChatRoom
 from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required

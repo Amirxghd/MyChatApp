@@ -22,7 +22,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('account/', include('account.urls')),
     path('groups/', include('public_chat.urls')),
-    path('private_chat/', include('PrivateChat.urls')),
+    path('private_chat/', include('private_chat.urls')),
     path('', include('chat.urls')),
 
 ]

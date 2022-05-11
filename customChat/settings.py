@@ -54,7 +54,7 @@ INSTALLED_APPS = [
 
     'account',
     'public_chat',
-    'PrivateChat',
+    'private_chat',
     'chat',
 ]
 

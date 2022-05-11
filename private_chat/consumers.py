@@ -10,9 +10,9 @@ from rest_framework import serializers
 import json
 import time
 
-from PrivateChat.models import PrivateRoomChatMessage, PrivateChatRoom
+from private_chat.models import PrivateRoomChatMessage, PrivateChatRoom
 from account.models import Account
-from PrivateChat.constansts import *
+from private_chat.constansts import *
 
 
 class PrivateChatConsumer(AsyncJsonWebsocketConsumer):
