@@ -1,13 +1,9 @@
-from django.shortcuts import render, redirect, reverse
-from django.urls import resolve
+from django.shortcuts import render, redirect
 from django.contrib.auth import login, logout, authenticate
-from django.conf import settings
 from .forms import RegistrationForm, AccountAuthenticationForm, AccountUpdateForm
 from django.http import HttpResponse
-from .models import Account
-from public_chat.models import PublicChatRoom
+from .models import Account, Skill
 from django.contrib.auth.decorators import login_required
-
 
 
 def register_view(request):
@@ -22,7 +18,7 @@ def register_view(request):
             raw_password = form.cleaned_data.get('password1')
             user = authenticate(email=email, password=raw_password)
             login(request, user)
-            return redirect('edit-account')
+            return redirect('edit-account', user.username)
         else:
             context['form'] = form
             return render(request, 'account/register.html', context)
@@ -76,11 +72,15 @@ def edit_view(request, username):
 
     account = Account.objects.get(username=username)
     form = AccountUpdateForm(instance=request.user)
-    if request.POST:
+    if request.POST and 'full_form' in request.POST:
         form = AccountUpdateForm(request.POST, request.FILES, instance=request.user)
         if form.is_valid():
             form.save()
             return redirect('account-info', username=account.username)
+    if request.POST and 'skill_form' in request.POST:
+        skill = Skill(title=request.POST.get('title'), level=request.POST.get('level'), owner=request.user)
+        skill.save()
+
 
 
     context['form'] = form
