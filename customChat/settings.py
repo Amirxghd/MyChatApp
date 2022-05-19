@@ -105,7 +105,7 @@ CHANNEL_LAYERS = {
 
 DB_NAME = "customchat"
 DB_USER = "postgres"
-DB_PASSWORD = "10243852"
+DB_PASSWORD = "postgres"
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
