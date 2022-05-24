@@ -4,9 +4,9 @@ Welcome to MyChatApp
 
 in this webapp, you can chat with your friends privately or create a group to chat with them
 
-This app uses Django/Chnanels and websocket
+This app uses Django/Channels and websocket
 
-To run The app you have two opptions:
+To run The app you have two options:
 
 1- Using Django:
 
