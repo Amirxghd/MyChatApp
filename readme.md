@@ -14,14 +14,14 @@ first clone the repository. make sure you have installed redis and postgres data
 
 then run the following command:
 
-  python manage.py makemigrations
-  python manage.py migrate
-  python runserver
+    python manage.py makemigrations
+    python manage.py migrate
+    python runserver
 
 2 - Using Docker:
 
 checkout to the dockerized branch with following command:
 
-git checkout dockerized
+`git checkout dockerized`
 
 then run the following commands: `sudo docker-compose up --build
